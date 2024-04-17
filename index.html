@@ -7,7 +7,6 @@
       display: inline-block;
       position: relative;
     }
-
     .word.active::before {
       content: "";
       position: absolute;
@@ -22,10 +21,13 @@
 </head>
 <body>
   <textarea type="text" id="input-text" placeholder="글 입력"></textarea>
-  <button onclick="displayText()">확인</button>
+  <button onclick="displayText()">완료</button>
+  <button onclick="toggleRandomWords()">랜덤 글자</button>
   <div id="text-container"></div>
 
   <script>
+    let randomWords = [];
+
     function displayText() {
       const inputText = document.getElementById("input-text").value;
       const textContainer = document.getElementById("text-container");
@@ -51,6 +53,20 @@
     function toggleActive(event) {
       const word = event.target;
       word.classList.toggle("active");
+    }
+
+    function toggleRandomWords() {
+      const words = document.querySelectorAll(".word");
+      randomWords = [];
+
+      for (let i = 0; i < words.length; i++) {
+        if (Math.random() < 0.5) {
+          words[i].classList.add("active");
+          randomWords.push(words[i]);
+        } else {
+          words[i].classList.remove("active");
+        }
+      }
     }
   </script>
 </body>
