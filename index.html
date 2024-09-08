@@ -24,20 +24,19 @@
   <button onclick="displayText()">완료</button>
   <button onclick="toggleRandomWords()">랜덤 글자</button>
   <div id="text-container"></div>
-
   <script>
     let randomWords = [];
+    let activeWords = [];
 
     function displayText() {
       const inputText = document.getElementById("input-text").value;
       const textContainer = document.getElementById("text-container");
       textContainer.innerHTML = "";
-
-      const lines = inputText.split('\n'); // 각 줄을 구분합니다.
+      const lines = inputText.split('\n');
       lines.forEach(line => {
-        const words = line.split(/\s+/); // 각 줄에서 단어를 분리합니다.
+        const words = line.split(/\s+/);
         words.forEach((word, index) => {
-          const wordElement = document.createElement("div"); // 각 단어를 <div> 요소로 변경합니다.
+          const wordElement = document.createElement("div");
           wordElement.className = "word";
           wordElement.textContent = word;
           wordElement.addEventListener("click", toggleActive);
@@ -46,19 +45,20 @@
             textContainer.appendChild(document.createTextNode(" "));
           }
         });
-        textContainer.appendChild(document.createElement("br")); // 줄바꿈을 추가합니다.
+        textContainer.appendChild(document.createElement("br"));
       });
+      updateActiveWords();
     }
 
     function toggleActive(event) {
       const word = event.target;
       word.classList.toggle("active");
+      updateActiveWords();
     }
 
     function toggleRandomWords() {
       const words = document.querySelectorAll(".word");
       randomWords = [];
-
       for (let i = 0; i < words.length; i++) {
         if (Math.random() < 0.5) {
           words[i].classList.add("active");
@@ -67,7 +67,27 @@
           words[i].classList.remove("active");
         }
       }
+      updateActiveWords();
     }
+
+    function updateActiveWords() {
+      activeWords = Array.from(document.querySelectorAll(".word.active"));
+    }
+
+    function revealOneWord() {
+      if (activeWords.length > 0) {
+        const wordToReveal = activeWords[0];
+        wordToReveal.classList.remove("active");
+        activeWords.shift();
+      }
+    }
+
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        revealOneWord();
+      }
+    });
   </script>
 </body>
 </html>
